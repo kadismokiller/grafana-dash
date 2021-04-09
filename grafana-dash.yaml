@@ -1,0 +1,94 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-dash
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana-dash
+  name: grafana-dash
+spec:
+  selector:
+    matchLabels:
+      app: grafana-dash
+  template:
+    metadata:
+      labels:
+        app: grafana-dash
+    spec:
+      containers:
+        - image: grafana/grafana:latest
+          imagePullPolicy: IfNotPresent
+          name: grafana-dash
+          ports:
+            - containerPort: 3000
+              name: http-grafanad
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /robots.txt
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              cpu: 100m
+              memory: 2Gi
+          volumeMounts:
+            - mountPath: /var/lib/grafana-dash
+              name: grafana-dash
+      volumes:
+        - name: grafana-dash
+          persistentVolumeClaim:
+            claimName: grafana-dash
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  namespace: grafana-dash
+  labels:
+    service: grafana-dash
+  name: grafana-dash
+spec:
+  type: "ClusterIP"
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: tcp
+  selector:
+    service: grafana-dash
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: grafana-dash
+  name: grafana-dash
+  annotations:
+    allow.http: "false"
+spec:
+  rules:
+  - host: grafana.rancher.k8smaster.club
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: grafana-dash
+            servicePort: 3000
