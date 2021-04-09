@@ -6,7 +6,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: default
-  name: grafana-dash
+  name: grafana-dash-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -61,7 +61,7 @@ spec:
       volumes:
         - name: grafana-dash
           persistentVolumeClaim:
-            claimName: grafana-dash
+            claimName: grafana-dash-pvc
 ---
 apiVersion: v1
 kind: Service
