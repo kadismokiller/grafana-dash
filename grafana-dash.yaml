@@ -57,7 +57,7 @@ spec:
               memory: 2Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana
+              name: grafana-dash
       volumes:
         - name: grafana-dash
           persistentVolumeClaim:
