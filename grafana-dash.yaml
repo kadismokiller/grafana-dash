@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: grafana-pvc
+  name: gfn-dash-pvc
   namespace: grafana
 spec:
   accessModes:
@@ -14,28 +14,50 @@ spec:
 
 ---
 
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: grafana
+  namespace: grafana
+  labels:
+    service: grafana
+spec:
+  type: "ClusterIP"
+  ports:
+    - port: 3000
+      targetPort: http-grafana
+      protocol: TCP      
+      name: tcp-graf
+  selector:
+    service: grafana
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
-  labels:
   name: grafana
   namespace: grafana
+  labels:
+    app: grafana
 spec:
   selector:
     matchLabels:
-      service: grafana
+      app: grafana
   template:
     metadata:
       labels:
-        service: grafana
+        app: grafana
     spec:
       containers:
-        - image: docker.io/grafana/grafana
+        - image: grafana/grafana
           imagePullPolicy: Always
           name: grafana
           ports:
             - containerPort: 3000
+              name: http-grafana
               protocol: TCP
           readinessProbe:
             failureThreshold: 3
@@ -55,29 +77,11 @@ spec:
               memory: 2Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana-volume
+              name: grafana-volume-1
       volumes:
-        - name: grafana-volume
+        - name: grafana-volume-1
           persistentVolumeClaim:
-            claimName: grafana-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  name: grafana
-  namespace: grafana
-  labels:
-    service: grafana
-spec:
-  type: "ClusterIP"
-  ports:
-    - port: 3000
-      targetPort: 3000
-      protocol: TCP      
-      name: tcp-graf
-  selector:
-    service: grafana
+            claimName: gfn-dash-pvc
 
 ---
 apiVersion: extensions/v1beta1
