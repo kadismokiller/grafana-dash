@@ -51,7 +51,7 @@ spec:
       labels:
         app: grafana
     spec:
-      SecurityContext:
+      securityContext:
           runAsUser: 472
           fsGroup: 472
       volumes:
