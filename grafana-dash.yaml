@@ -51,6 +51,9 @@ spec:
       labels:
         app: grafana
     spec:
+      ecurityContext:
+          runAsUser: 472
+          fsGroup: 472
       containers:
         - image: grafana/grafana
           imagePullPolicy: Always
@@ -78,8 +81,6 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-volume-1
-          securityContext:
-              fsGroup: 472
       volumes:
         - name: grafana-volume-1
           persistentVolumeClaim:
