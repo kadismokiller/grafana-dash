@@ -78,6 +78,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-volume-1
+          securityContext:
+              fsGroup: 472
       volumes:
         - name: grafana-volume-1
           persistentVolumeClaim:
