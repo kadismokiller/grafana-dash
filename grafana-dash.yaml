@@ -54,11 +54,12 @@ spec:
       SecurityContext:
           runAsUser: 472
           fsGroup: 472
+      volumes:
+      - name: grafana-volume-1
+        persistentVolumeClaim:
+        claimName: gfn-dash-pvc
       containers:
         - image: grafana/grafana
-          user: "$UID:$GID"
-          volumes:
-            ./grafana_db:/var/lib/grafana
           imagePullPolicy: Always
           name: grafana
           ports:
@@ -84,10 +85,6 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/grafana
               name: grafana-volume-1
-      volumes:
-        - name: grafana-volume-1
-          persistentVolumeClaim:
-            claimName: gfn-dash-pvc
 
 ---
 apiVersion: extensions/v1beta1
