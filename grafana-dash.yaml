@@ -84,3 +84,5 @@ spec:
           backend:
             serviceName: grafana
             servicePort: http-grafana
+    selector:
+      app: grafana
