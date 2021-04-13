@@ -99,7 +99,7 @@ spec:
   - host: grafana.rancher.k8smaster.club
     http:
       paths:
-        - path: /
+        - path: /var/lib/grafana
           backend:
             serviceName: grafana
             servicePort: http-grafana
