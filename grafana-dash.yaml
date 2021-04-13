@@ -74,7 +74,7 @@ metadata:
   creationTimestamp: null
   namespace: grafana
   labels:
-    service: grafana
+    app: grafana
   name: grafana
 spec:
   type: "ClusterIP"
