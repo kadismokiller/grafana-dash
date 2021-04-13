@@ -14,25 +14,6 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  name: grafana
-  namespace: grafana
-  labels:
-    service: grafana
-spec:
-  type: "ClusterIP"
-  ports:
-    - port: 3000
-      targetPort: http-grafana
-      protocol: TCP      
-  selector:
-    app: grafana
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,19 +67,17 @@ spec:
             claimName: gfn-dash-pvc
 
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
+
+apiVersion: v1
+kind: Service
 metadata:
-  namespace: grafana
   name: grafana
-  annotations:
-    allow.http: "false"
 spec:
-  rules:
-  - host: grafana.rancher.k8smaster.club
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: grafana
-            servicePort: http-grafana
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: http-grafana
+  selector:
+    app: grafana
+  sessionAffinity: None
+  type: LoadBalancer
