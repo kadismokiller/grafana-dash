@@ -51,11 +51,14 @@ spec:
       labels:
         app: grafana
     spec:
-      ecurityContext:
+      SecurityContext:
           runAsUser: 472
           fsGroup: 472
       containers:
         - image: grafana/grafana
+          user: "$UID:$GID"
+          volumes:
+            ./grafana_db:/var/lib/grafana
           imagePullPolicy: Always
           name: grafana
           ports:
