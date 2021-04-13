@@ -1,35 +1,30 @@
-
-
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  namespace: default
-  name: grafana-pvc
+  name: grafana
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  storageClassName: longhorn
+      storage: 1Gi
+  storageClassName: local-path
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: default
   labels:
-    app: grafana-dash
-  name: grafana-dash
+    app: grafana
+  name: grafana
 spec:
   selector:
     matchLabels:
-      app: grafana-dash
+      app: grafana
   template:
     metadata:
       labels:
-        app: grafana-dash
+        app: grafana
     spec:
       containers:
         - image: grafana/grafana:latest
@@ -57,29 +52,22 @@ spec:
               memory: 2Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana-pvc
+              name: grafana
       volumes:
-        - name: grafana-pvc
+        - name: grafana
           persistentVolumeClaim:
-            claimName: grafana-pvc
-
-
+            claimName: grafana
 ---
-
-
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  namespace: default
-  name: grafana-public
-  annotations:
-    allow.http: "false"
+  name: grafana
 spec:
-  rules:
-  - host: grafana.rancher.k8smaster.club
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: grafana-public
-            servicePort: 3000
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: http-grafana
+  selector:
+    app: grafana
+  sessionAffinity: None
+  type: LoadBalancer
