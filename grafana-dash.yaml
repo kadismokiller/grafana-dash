@@ -34,7 +34,7 @@ spec:
       containers:
         - image: grafana/grafana:latest
           imagePullPolicy: IfNotPresent
-          name: grafana-dash
+          name: grafana
           ports:
             - containerPort: 3000
               name: http-grafana
