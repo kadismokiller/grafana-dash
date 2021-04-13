@@ -76,6 +76,8 @@ metadata:
   annotations:
     allow.http: "false"
 spec:
+  selector:
+      app: grafana
   rules:
   - host: grafana.rancher.k8smaster.club
     http:
@@ -84,5 +86,3 @@ spec:
           backend:
             serviceName: grafana
             servicePort: http-grafana
-    selector:
-      app: grafana
