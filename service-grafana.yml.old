@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  namespace: default
+  labels:
+    service: grafana-dash
+  name: grafana-dash
+spec:
+  type: "ClusterIP"
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: tcp
+  selector:
+    service: grafana-dash
+---

@@ -57,35 +57,21 @@ spec:
               memory: 2Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana
+              name: grafana-pvc
       volumes:
         - name: grafana-pvc
           persistentVolumeClaim:
             claimName: grafana-pvc
+
+
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  namespace: default
-  labels:
-    service: grafana-dash
-  name: grafana-dash
-spec:
-  type: "ClusterIP"
-  ports:
-  - port: 3000
-    targetPort: 3000
-    protocol: TCP
-    name: tcp
-  selector:
-    service: grafana-dash
----
+
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   namespace: default
-  name: grafana-dash
+  name: grafana-public
   annotations:
     allow.http: "false"
 spec:
@@ -95,5 +81,5 @@ spec:
       paths:
         - path: /
           backend:
-            serviceName: grafana-dash
+            serviceName: grafana-public
             servicePort: 3000
