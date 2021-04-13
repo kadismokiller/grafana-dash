@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: grafana-1234
+  name: grafana-pvc
   namespace: grafana
 spec:
   accessModes:
@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - image: docker.io/grafana/grafana
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: grafana
           ports:
             - containerPort: 3000
@@ -56,11 +56,11 @@ spec:
               memory: 2Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana
+              name: grafana-volume
       volumes:
-        - name: grafana
+        - name: grafana-volume
           persistentVolumeClaim:
-            claimName: grafana-1234
+            claimName: grafana-pvc
 ---
 apiVersion: v1
 kind: Service
