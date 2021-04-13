@@ -17,26 +17,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
   labels:
-    app: grafana
   name: grafana
   namespace: grafana
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      app: grafana
+      service: grafana
   template:
     metadata:
       labels:
-        app: grafana
+        service: grafana
     spec:
       containers:
-        - image: grafana/grafana:latest
+        - image: docker.io/grafana/grafana:latest
           #imagePullPolicy: IfNotPresent
           name: grafana
           ports:
             - containerPort: 3000
-              name: http-grafana
               protocol: TCP
           readinessProbe:
             failureThreshold: 3
