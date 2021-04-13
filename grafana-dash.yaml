@@ -68,16 +68,19 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: Service
+apiVersion: extensions/v1beta1
+kind: Ingress
 metadata:
+  namespace: grafana
   name: grafana
+  annotations:
+    allow.http: "false"
 spec:
-  ports:
-    - port: 3000
-      protocol: TCP
-      targetPort: http-grafana
-  selector:
-    app: grafana
-  sessionAffinity: None
-  type: LoadBalancer
+  rules:
+  - host: grafana.rancher.k8smaster.club
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: grafana
+            servicePort: 3000
