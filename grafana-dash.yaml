@@ -32,8 +32,8 @@ spec:
         service: grafana
     spec:
       containers:
-        - image: docker.io/grafana/grafana:latest
-          #imagePullPolicy: IfNotPresent
+        - image: docker.io/grafana/grafana
+          imagePullPolicy: IfNotPresent
           name: grafana
           ports:
             - containerPort: 3000
